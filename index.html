@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Erichlyn Castos | Creative Dimension — Graphic Designer</title>
+    <!-- Google Fonts + Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            background-color: #08020c;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            color: #F5EBFA;
+        }
+
+        /* Purple Palette */
+        :root {
+            --deep: #49225B;
+            --vibrant: #6E3482;
+            --lavender: #A56ABD;
+            --soft-lilac: #E7DBEF;
+            --off-white: #F5EBFA;
+        }
+
+        /* custom cursor */
+        .cursor {
+            width: 12px;
+            height: 12px;
+            background: #E7DBEF;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+        }
+        .cursor-follower {
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid #A56ABD;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: 0.15s ease;
+        }
+
+        /* ========== UNIQUE BACKGROUND: "NEURAL NEBULA" ========== */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            display: block;
+            background: radial-gradient(circle at 30% 20%, #1e0a2b, #0a0312);
+        }
+        
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: -1;
+            animation: orbFloat 20s infinite alternate ease-in-out;
+        }
+        .orb1 { width: 50vw; height: 50vw; background: #6E3482; top: -20%; left: -15%; }
+        .orb2 { width: 45vw; height: 45vw; background: #A56ABD; bottom: -15%; right: -10%; animation-duration: 25s; opacity: 0.25; }
+        .orb3 { width: 35vw; height: 35vw; background: #E7DBEF; top: 60%; left: 70%; filter: blur(100px); opacity: 0.15; }
+        
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(5%, 8%) scale(1.2); }
+        }
+
+        /* Glassmorphic panels */
+        .glass-panel {
+            background: rgba(245, 235, 250, 0.06);
+            backdrop-filter: blur(14px);
+            border-radius: 2rem;
+            border: 1px solid rgba(167, 106, 189, 0.35);
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.4);
+            transition: all 0.4s ease;
+        }
+        .glass-panel:hover {
+            background: rgba(245, 235, 250, 0.1);
+            border-color: rgba(167, 106, 189, 0.7);
+        }
+
+        /* Hero Layout */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0 7%;
+            position: relative;
+            z-index: 3;
+        }
+        .hero-text { flex: 1.2; }
+        .hero-line {
+            font-size: 5.5rem;
+            font-weight: 800;
+            font-family: 'Playfair Display', serif;
+            line-height: 1;
+            background: linear-gradient(135deg, #F5EBFA, #E7DBEF, #A56ABD);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .hero-sub {
+            margin: 1.2rem 0 2rem;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: #E7DBEF;
+        }
+        .btn-magnetic {
+            display: inline-flex;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+        .btn-primary {
+            background: linear-gradient(95deg, #6E3482, #A56ABD);
+            color: white;
+            box-shadow: 0 8px 18px #2e143e;
+        }
+        .btn-outline {
+            border: 1.5px solid #A56ABD;
+            background: transparent;
+            color: #F5EBFA;
+        }
+        .btn-primary:hover, .btn-outline:hover { transform: translateY(-3px); filter: brightness(1.05);}
+
+        /* Floating 3D card */
+        .floating-3d { animation: floatCard 6s infinite alternate; }
+        @keyframes floatCard {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-15px); }
+        }
+
+        /* ===== ENLARGED PHOTO STYLES ===== */
+        /* Hero circle image - BIGGER */
+        .hero-img-circle {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 1.2rem;
+            border: 4px solid #A56ABD;
+            box-shadow: 0 0 30px rgba(165,106,189,0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .hero-img-circle:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 40px rgba(165,106,189,0.7);
+            border-color: #E7DBEF;
+        }
+        
+        /* About section portrait - LARGER */
+        .blend-portrait {
+            width: 100%;
+            max-width: 340px;
+            border-radius: 2rem;
+            object-fit: cover;
+            box-shadow: 0 25px 40px -12px rgba(0,0,0,0.6);
+            border: 3px solid rgba(167,106,189,0.8);
+            transition: transform 0.3s, filter 0.3s;
+        }
+        .blend-portrait:hover {
+            transform: scale(1.02);
+            border-color: #E7DBEF;
+            filter: drop-shadow(0 0 15px #A56ABD);
+        }
+        
+        /* Adjust portrait card to accommodate bigger image */
+        .portrait-card {
+            flex: 1;
+            background: rgba(110,52,130,0.25);
+            border-radius: 2rem;
+            padding: 2rem 1.8rem;
+            backdrop-filter: blur(12px);
+            text-align: center;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .stat-number {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: #E7DBEF;
+        }
+
+        /* Skills spheres */
+        .skills-sphere-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .sphere {
+            width: 130px;
+            height: 130px;
+            background: radial-gradient(circle at 30% 30%, #A56ABD, #6E3482);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+            color: #F5EBFA;
+        }
+        .sphere:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 20px #A56ABD;
+            background: radial-gradient(circle at 40% 40%, #E7DBEF, #A56ABD);
+            color: #49225B;
+        }
+
+        /* Bento services */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 1.8rem;
+            padding: 2rem 0;
+        }
+        .bento-card {
+            background: rgba(73,34,91,0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 1.8rem;
+            padding: 1.8rem;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .bento-card:hover { border-bottom-color: #E7DBEF; transform: translateY(-5px); background: rgba(165,106,189,0.3);}
+
+        /* Horizontal portfolio */
+        .horizontal-wrap {
+            overflow-x: auto;
+            display: flex;
+            gap: 2rem;
+            padding: 1rem 0 3rem;
+            scroll-snap-type: x mandatory;
+            cursor: grab;
+        }
+        .portfolio-item {
+            min-width: 320px;
+            background: rgba(0,0,0,0.35);
+            border-radius: 2rem;
+            padding: 1rem;
+            transition: 0.3s;
+            scroll-snap-align: start;
+        }
+        .portfolio-item:hover { border: 1px solid #A56ABD; transform: scale(1.02);}
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+        .timeline-item {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            background: rgba(245,235,250,0.08);
+            backdrop-filter: blur(6px);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        /* Creative Vision Showcase */
+        .creative-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        .showcase-feature {
+            background: rgba(110,52,130,0.35);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 2rem;
+            width: 260px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid rgba(167,106,189,0.4);
+        }
+        .showcase-feature i { font-size: 3rem; color: #E7DBEF; margin-bottom: 1rem; }
+        .showcase-feature:hover { transform: translateY(-10px); background: rgba(165,106,189,0.4); border-color: #E7DBEF;}
+
+        /* Testimonials */
+        .testimonial-card-move {
+            background: rgba(167,106,189,0.2);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 1.5rem;
+        }
+        /* Contact form */
+        .luxury-form input, .luxury-form textarea, .luxury-form select {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #A56ABD;
+            border-radius: 2rem;
+            padding: 1rem;
+            color: white;
+            width: 100%;
+        }
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #A56ABD, #E7DBEF);
+            width: 0%;
+            z-index: 10000;
+        }
+        @media (max-width: 900px) {
+            .hero-line { font-size: 3rem; }
+            .hero { flex-direction: column; text-align: center; gap: 2rem; }
+            .hero-img-circle { width: 160px; height: 160px; }
+            .blend-portrait { max-width: 260px; }
+        }
+        footer { text-align: center; padding: 2rem; color: #bda0cf; }
+    </style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="follower"></div>
+
+<!-- CANVAS BACKGROUND: UNIQUE NEURAL WAVES + PARTICLE CONNECTIONS -->
+<canvas id="canvas-bg"></canvas>
+<div class="glow-orb orb1"></div>
+<div class="glow-orb orb2"></div>
+<div class="glow-orb orb3"></div>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-text" data-speed="0.8">
+        <div style="overflow: hidden;"><div class="hero-line" id="heroLine1">ERICHLYN</div></div>
+        <div style="overflow: hidden;"><div class="hero-line" id="heroLine2">CASTOS</div></div>
+        <div class="hero-sub">Graphic Designer </div>
+        <div>
+            <a href="#portfolio" class="btn-magnetic btn-primary">View Portfolio</a>
+            <a href="#contact" class="btn-magnetic btn-outline">Let's Work Together</a>
+        </div>
+    </div>
+    <div class="floating-3d glass-panel" style="flex:0.9; padding: 2rem; text-align: center;">
+        <!-- ENLARGED PHOTO in Hero -->
+        <img src="prof.png" alt="Erichlyn Castos" class="hero-img-circle">
+        <i class="fas fa-palette" style="font-size: 2rem; color:#E7DBEF; margin-top: 0.5rem;"></i>
+        <div style="font-size: 1.8rem; margin:0.5rem 0;">✦ Creative Dimension ✦</div>
+        <div class="stats" style="justify-content: center;"><span>✨ Brand Elevation</span><span>🎯 Visual Identity</span></div>
+    </div>
+</section>
+
+<!-- About Section with ENLARGED portrait -->
+<section id="about" style="padding: 4rem 5%;">
+    <div class="about-split">
+        <div class="portrait-card" data-aos="fade-right">
+            <img src="prof.png" alt="Erichlyn Castos Professional" class="blend-portrait">
+            <h3 style="margin-top: 1.2rem; font-size: 1.6rem;">Erichlyn Castos</h3>
+            <p>Creative Director & Designer blending strategy & aesthetics.</p>
+        </div>
+        <div class="portrait-card" style="flex:1.5;">
+            <h2 style="font-size: 2rem;">Design with purpose.</h2>
+            <p style="margin: 1rem 0; line-height:1.5;">I craft meaningful visual identities that resonate, blending modern creativity with strategic storytelling. Every project is a new dimension to explore.</p>
+            <div class="stats">
+                <div class="stat-item"><div class="stat-number" id="counter1">0</div><span>Designs Created</span></div>
+                <div class="stat-item"><div class="stat-number" id="counter2">0</div><span>Clients Served</span></div>
+                <div class="stat-item"><div class="stat-number" id="counter3">0</div><span>Years Exp</span></div>
+                <div class="stat-item"><div class="stat-number" id="counter4">0</div><span>Passion %</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section>
+    <h2 style="text-align: center; font-size: 3rem; font-family: 'Playfair Display';">Fluid Skills</h2>
+    <div class="skills-sphere-grid">
+        <div class="sphere">Logo Design</div>
+        <div class="sphere">Branding</div>
+        <div class="sphere">Typography</div>
+        <div class="sphere">Print Design</div>
+        <div class="sphere">Social Media</div>
+        <div class="sphere">Jersey Design</div>
+        <div class="sphere">Illustration</div>
+    </div>
+</section>
+
+<!-- Services Bento -->
+<section id="services">
+    <h2 style="text-align: center; font-size: 2.8rem;">Premium Services</h2>
+    <div class="bento-grid">
+        <div class="bento-card"><i class="fas fa-crown" style="font-size:2rem;"></i><h3>Logo Design</h3><p>Custom branding systems.</p></div>
+        <div class="bento-card"><i class="fas fa-building"></i><h3>Brand Identity</h3><p>Business visual identity.</p></div>
+        <div class="bento-card"><i class="fas fa-tshirt"></i><h3>Jersey Design</h3><p>Sports & esports apparel.</p></div>
+        <div class="bento-card"><i class="fab fa-instagram"></i><h3>Social Media Design</h3><p>Marketing graphics.</p></div>
+        <div class="bento-card"><i class="fas fa-ad"></i><h3>Tarpaulin Design</h3><p>Large-format promotional.</p></div>
+        <div class="bento-card"><i class="fas fa-poster"></i><h3>Poster & Flyer</h3><p>Creative advertisements.</p></div>
+        <div class="bento-card"><i class="fas fa-box"></i><h3>Packaging Design</h3><p>Labels & presentation.</p></div>
+    </div>
+</section>
+
+<!-- Horizontal Portfolio -->
+<section id="portfolio">
+    <h2 style="font-size: 2.8rem; text-align:center;">Portfolio • Horizontal Dimension</h2>
+    <div class="horizontal-wrap" id="scrollHorizontal">
+        <div class="portfolio-item"><div style="background:#A56ABD; border-radius:1rem; padding:1rem; text-align:center;"><i class="fas fa-paintbrush" style="font-size:3rem;"></i><h4>Logo Designs</h4><p>Minimalist brandmarks</p><span>Adobe Illustrator</span></div></div>
+        <div class="portfolio-item"><div style="background:#6E3482; border-radius:1rem; padding:1rem;"><i class="fas fa-layer-group" style="font-size:3rem;"></i><h4>Brand Identity</h4><p>Full visual systems</p><span>Figma + Photoshop</span></div></div>
+        <div class="portfolio-item"><div style="background:#49225B; border-radius:1rem; padding:1rem;"><i class="fas fa-tshirt"></i><h4>Jersey Concepts</h4><p>Esports & sports apparel</p><span>Illustrator</span></div></div>
+        <div class="portfolio-item"><div style="background:#A56ABD; border-radius:1rem; padding:1rem;"><i class="fab fa-instagram"></i><h4>Social Media Campaigns</h4><p>Engaging carousels</p><span>Canva + Photoshop</span></div></div>
+        <div class="portfolio-item"><div style="background:#6E3482; border-radius:1rem; padding:1rem;"><i class="fas fa-chalkboard"></i><h4>Tarpaulin Designs</h4><p>Event Backdrops</p><span>CorelDRAW</span></div></div>
+        <div class="portfolio-item"><div style="background:#49225B; border-radius:1rem; padding:1rem;"><i class="fas fa-scroll"></i><h4>Print Materials</h4><p>Brochures, flyers, labels</p><span>InDesign</span></div></div>
+    </div>
+</section>
+
+<!-- Experience Timeline -->
+<section>
+    <h2 style="text-align:center; font-size:2.8rem;">Creative Journey</h2>
+    <div class="timeline">
+        <div class="timeline-item"><div><i class="fas fa-brush"></i></div><div><h3>Graphic Designer</h3><p>Branding & print projects. Full-time creative studio.</p></div></div>
+        <div class="timeline-item"><div><i class="fas fa-laptop-code"></i></div><div><h3>Freelance Designer</h3><p>Custom client work across industries & startups.</p></div></div>
+        <div class="timeline-item"><div><i class="fas fa-chart-line"></i></div><div><h3>Creative Content Designer</h3><p>Marketing visuals and campaign strategies.</p></div></div>
+        <div class="timeline-item"><div><i class="fas fa-crown"></i></div><div><h3>Brand Identity Specialist</h3><p>Professional branding solutions.</p></div></div>
+    </div>
+</section>
+
+<!-- Creative Vision Showcase -->
+<section>
+    <h2 style="text-align:center; font-size: 2.6rem; font-family: 'Playfair Display';">Creative Vision & Ethos</h2>
+    <div class="creative-showcase">
+        <div class="showcase-feature"><i class="fas fa-gem"></i><h3>Art Direction</h3><p>Curating visual narratives with a luxury editorial eye.</p></div>
+        <div class="showcase-feature"><i class="fas fa-brain"></i><h3>Strategic Mindset</h3><p>Design rooted in brand strategy & market resonance.</p></div>
+        <div class="showcase-feature"><i class="fas fa-glasses"></i><h3>Detail Obsessed</h3><p>Meticulous craftsmanship from typography to final render.</p></div>
+        <div class="showcase-feature"><i class="fas fa-hand-sparkles"></i><h3>Bespoke Identity</h3><p>No templates — every project is a unique signature.</p></div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section>
+    <h2 style="text-align:center;">Kind Words</h2>
+    <div style="display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;">
+        <div class="testimonial-card-move" style="max-width:300px;">★★★★★ <p>"Professional, creative, and highly responsive. Erichlyn brought our brand to life!"</p><strong>— Client</strong></div>
+        <div class="testimonial-card-move" style="max-width:300px;">★★★★★ <p>"Transformed our visual identity beyond expectations. Pure magic."</p><strong>— Startup Founder</strong></div>
+        <div class="testimonial-card-move" style="max-width:300px;">★★★★★ <p>"Outstanding jersey & social media artwork. A true creative partner."</p><strong>— Esports Team</strong></div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" style="padding: 4rem 5%;">
+    <div class="glass-panel" style="max-width: 1000px; margin: auto; padding: 2rem;">
+        <h2 style="font-size: 2.8rem; text-align:center;">Let's Create Something Amazing</h2>
+        <form class="luxury-form" style="display: grid; gap: 1rem; margin: 2rem 0;">
+            <input type="text" placeholder="Full Name">
+            <input type="email" placeholder="Email">
+            <select><option>Project Type</option><option>Logo/Branding</option><option>Jersey Design</option><option>Print Materials</option></select>
+            <textarea rows="3" placeholder="Share your vision..."></textarea>
+            <button type="button" class="btn-primary" style="border:none; cursor:pointer;">Send Inquiry</button>
+        </form>
+        <div style="text-align:center; font-size: 2rem;">
+            <i class="fab fa-facebook"></i> <i class="fab fa-instagram"></i> <i class="fab fa-behance"></i> <i class="fab fa-linkedin"></i>
+        </div>
+    </div>
+</section>
+<footer>© 2025 Erichlyn Castos — Creative Dimension Studio</footer>
+
+<script>
+    // ========== UNIQUE BACKGROUND: NEURAL WAVES + CONNECTING PARTICLES ==========
+    const canvas = document.getElementById('canvas-bg');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    let mouseX = null, mouseY = null;
+    const PARTICLE_COUNT = 90;
+    const CONNECTION_DIST = 180;
+    
+    function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+    
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.3;
+            this.size = Math.random() * 2.5 + 1.2;
+            this.baseColor = `hsl(${270 + Math.random() * 40}, 70%, 65%)`;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if(this.x < 0) this.x = width;
+            if(this.x > width) this.x = 0;
+            if(this.y < 0) this.y = height;
+            if(this.y > height) this.y = 0;
+            
+            if(mouseX !== null && mouseY !== null) {
+                const dx = this.x - mouseX;
+                const dy = this.y - mouseY;
+                const dist = Math.hypot(dx, dy);
+                if(dist < 120) {
+                    const angle = Math.atan2(dy, dx);
+                    const force = (120 - dist) / 120 * 0.8;
+                    this.x += Math.cos(angle) * force;
+                    this.y += Math.sin(angle) * force;
+                }
+            }
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.baseColor;
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = "#A56ABD";
+            ctx.fill();
+        }
+    }
+    
+    function initParticles() {
+        particles = [];
+        for(let i=0; i<PARTICLE_COUNT; i++) {
+            particles.push(new Particle());
+        }
+    }
+    
+    function drawConnections() {
+        for(let i=0; i<particles.length; i++) {
+            for(let j=i+1; j<particles.length; j++) {
+                const p1 = particles[i];
+                const p2 = particles[j];
+                const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+                if(dist < CONNECTION_DIST) {
+                    const opacity = (1 - (dist / CONNECTION_DIST)) * 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.strokeStyle = `rgba(167, 106, 189, ${opacity * 0.7})`;
+                    ctx.lineWidth = 1.2;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+    
+    function drawGradientMesh() {
+        const grad = ctx.createLinearGradient(width*0.2, 0, width*0.8, height);
+        grad.addColorStop(0, 'rgba(73,34,91,0.1)');
+        grad.addColorStop(0.5, 'rgba(106,52,130,0.15)');
+        grad.addColorStop(1, 'rgba(165,106,189,0.08)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, width, height);
+    }
+    
+    let time = 0;
+    function animateBackground() {
+        if(!ctx) return;
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = '#08020c';
+        ctx.fillRect(0, 0, width, height);
+        
+        ctx.save();
+        ctx.globalAlpha = 0.4;
+        for(let i=0;i<3;i++) {
+            ctx.beginPath();
+            let offset = time * 0.002 + i;
+            for(let x=0; x<width+50; x+=40) {
+                let y = height/2 + Math.sin(x * 0.008 + offset) * 70 + Math.cos(x*0.005 + offset*1.3) * 40;
+                y += i*80;
+                if(x===0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = `rgba(167, 106, 189, 0.35)`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+        ctx.restore();
+        
+        for(let p of particles) {
+            p.update();
+            p.draw();
+        }
+        drawConnections();
+        drawGradientMesh();
+        
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        for(let i=0;i<4;i++) {
+            ctx.beginPath();
+            ctx.moveTo(width*0.2, height*0.1);
+            ctx.lineTo(width*0.5 + Math.sin(time*0.003 + i)*30, height*0.6);
+            ctx.lineTo(width*0.8, height*0.2);
+            ctx.fillStyle = `rgba(110,52,130,0.03)`;
+            ctx.fill();
+        }
+        ctx.restore();
+        
+        time++;
+        requestAnimationFrame(animateBackground);
+    }
+    
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+        initParticles();
+    });
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        setTimeout(() => { mouseX = null; mouseY = null; }, 2000);
+    });
+    
+    resizeCanvas();
+    initParticles();
+    animateBackground();
+    
+    // ========== GSAP & OTHER INTERACTIONS ==========
+    const cursor = document.getElementById('cursor');
+    const follower = document.getElementById('follower');
+    document.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX-6, y: e.clientY-6, duration: 0.05 });
+        gsap.to(follower, { x: e.clientX-18, y: e.clientY-18, duration: 0.2 });
+    });
+    
+    document.querySelectorAll('.btn-magnetic').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width/2;
+            const y = e.clientY - rect.top - rect.height/2;
+            btn.style.transform = `translate(${x*0.2}px, ${y*0.2}px)`;
+        });
+        btn.addEventListener('mouseleave', () => btn.style.transform = '');
+    });
+
+    window.addEventListener('scroll', () => {
+        let winScroll = document.documentElement.scrollTop;
+        let height = document.documentElement.scrollHeight - window.innerHeight;
+        let scrolled = (winScroll / height) * 100;
+        document.getElementById('progressBar').style.width = scrolled + '%';
+    });
+
+    gsap.registerPlugin(ScrollTrigger);
+    gsap.from("#heroLine1", { duration: 1, y: 100, opacity: 0, ease: "power3.out" });
+    gsap.from("#heroLine2", { duration: 1, y: 100, opacity: 0, delay: 0.2 });
+    gsap.from(".hero-sub", { duration: 1, opacity: 0, y: 30, delay: 0.5 });
+
+    function animateCounter(element, target, suffix='') {
+        let count = 0;
+        let increment = target / 50;
+        let updateCounter = () => {
+            count += increment;
+            if(count < target) {
+                element.innerText = Math.floor(count) + suffix;
+                requestAnimationFrame(updateCounter);
+            } else {
+                element.innerText = target + suffix;
+            }
+        };
+        updateCounter();
+    }
+    ScrollTrigger.create({
+        trigger: "#about",
+        start: "top 80%",
+        once: true,
+        onEnter: () => {
+            animateCounter(document.getElementById('counter1'), 217, '+');
+            animateCounter(document.getElementById('counter2'), 48, '+');
+            animateCounter(document.getElementById('counter3'), 5, '+');
+            animateCounter(document.getElementById('counter4'), 100, '%');
+        }
+    });
+
+    const horizontalDiv = document.getElementById('scrollHorizontal');
+    let isDown = false, startX, scrollLeft;
+    horizontalDiv.addEventListener('mousedown', (e) => { isDown = true; startX = e.pageX - horizontalDiv.offsetLeft; scrollLeft = horizontalDiv.scrollLeft; });
+    window.addEventListener('mouseup', () => isDown = false);
+    window.addEventListener('mousemove', (e) => { if(!isDown) return; e.preventDefault(); const x = e.pageX - horizontalDiv.offsetLeft; const walk = (x - startX) * 1.5; horizontalDiv.scrollLeft = scrollLeft - walk; });
+    
+    document.querySelectorAll('.sphere').forEach(s => {
+        s.addEventListener('mouseenter', () => gsap.to(s, { rotateY: 180, duration: 0.5, ease: "back.out" }));
+        s.addEventListener('mouseleave', () => gsap.to(s, { rotateY: 0, duration: 0.4 }));
+    });
+    gsap.utils.toArray('.timeline-item').forEach((item, i) => {
+        gsap.from(item, { scrollTrigger: { trigger: item, start: "top 85%" }, opacity: 0, x: -40, duration: 0.7, delay: i*0.1 });
+    });
+    gsap.to('.testimonial-card-move', { y: -10, duration: 3, repeat: -1, yoyo: true, stagger: 0.2 });
+</script>
+</body>
+</html>
